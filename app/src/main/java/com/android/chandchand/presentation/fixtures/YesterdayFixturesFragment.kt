@@ -18,7 +18,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -37,7 +36,7 @@ class YesterdayFixturesFragment : Fragment(), HeaderClickListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fixturesController = FixturesController(this)
-        sendIntent(FixturesIntent.GetFixtures(getDateFromToday(-1), WeekDay.Yesterday))
+        viewModel.send(FixturesIntent.GetFixtures(getDateFromToday(-1), WeekDay.Yesterday))
         viewModel.state.onEach { state ->
             render(state)
         }.launchIn(lifecycleScope)
@@ -55,13 +54,6 @@ class YesterdayFixturesFragment : Fragment(), HeaderClickListener,
         super.onViewCreated(view, savedInstanceState)
         binding.ervYesterdayFixtures.setController(fixturesController)
     }
-
-    private fun sendIntent(intent: FixturesIntent) {
-        lifecycleScope.launch {
-            viewModel.intents.send(intent)
-        }
-    }
-
 
     override fun render(state: FixturesState) {
         with(state) {

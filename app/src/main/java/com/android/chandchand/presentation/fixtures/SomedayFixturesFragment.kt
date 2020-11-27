@@ -22,7 +22,6 @@ import ir.hamsaa.persiandatepicker.util.PersianCalendar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -61,15 +60,9 @@ class SomedayFixturesFragment : Fragment(), HeaderClickListener,
         binding.ervSomedayFixtures.setController(fixturesController)
         viewModel.somedayDateModel.observe(viewLifecycleOwner) { dateModel ->
             binding.tvDateDescription.text = dateModel.description
-            sendIntent(FixturesIntent.GetFixtures(dateModel.date, WeekDay.Someday))
+            viewModel.send(FixturesIntent.GetFixtures(dateModel.date, WeekDay.Someday))
         }
         setUp()
-    }
-
-    private fun sendIntent(intent: FixturesIntent) {
-        lifecycleScope.launch {
-            viewModel.intents.send(intent)
-        }
     }
 
     override fun render(state: FixturesState) {

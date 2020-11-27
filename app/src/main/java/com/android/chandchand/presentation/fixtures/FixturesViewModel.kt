@@ -27,6 +27,10 @@ class FixturesViewModel @ViewModelInject constructor(
     private val _state = MutableStateFlow(FixturesState())
     override val state: StateFlow<FixturesState> get() = _state
 
+    fun send(intent: FixturesIntent) = viewModelScope.launch {
+        intents.send(intent)
+    }
+
     init {
         viewModelScope.launch {
             handleIntent()
